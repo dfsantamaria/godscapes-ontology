@@ -1,0 +1,65 @@
+PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
+PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
+
+Select DISTINCT  (STR(?siteName) AS ?Site) 
+  (STR(?acroString) AS ?Acronym) 
+  (STR(?areaString) AS ?Area) 
+  (STR(?idNumString) AS ?IDNumber) 
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?motifOrigin),"_MO_"); separator=", ") AS ?MotifOrigins) 
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?divinOrigin),"_DA_"); separator=", ") AS ?DivineOrigins) 
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?style), "_ST_"); separator=", ") AS ?MotifStyles)
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?motifType), "#"); separator=", ") AS ?MotifType)
+
+WHERE
+{
+  ?record a god:GodscapesRecord.  
+  ?record cidoc:P70_documents ?assign.
+  ?assign a god:GodscapesAttributeAssignment.
+  ?assign cidoc:P140_assigned_attribute_to ?icono. 
+  ?icono a god:IconographySupport.
+  ?icono cidoc:P128_carries ?motif.
+  ?motif a god:IconographyMotif.
+
+  ?t cidoc:P141_assigned ?motif.
+  ?t cidoc:P140_assigned_attribute_to ?motifOrigin. 
+  ?motifOrigin a god:OriginType.
+ 
+
+  ?motif cidoc:P65_incorporates ?divine.  
+  ?t1 cidoc:P141_assigned ?divine.
+  ?t1 cidoc:P140_assigned_attribute_to ?divinOrigin.
+
+  ?t2 a god:Style.
+  ?t2 cidoc:P62_depicts ?motif.
+  ?t2 cidoc:P2_has_type ?style.
+
+  FILTER(  STRAFTER(STR(?motifOrigin), "_MO_")  != STRAFTER(STR(?divinOrigin), "_DA_") OR STRAFTER(STR(?divinOrigin), "_DA_") !=  STRAFTER(STR(?style), "_ST_")  )
+
+  ?t3 cidoc:P141_assigned ?motif.
+  ?t3 cidoc:P140_assigned_attribute_to ?motifType.
+  ?motifType a god:MotifType.
+
+  #ID
+  ?record cidoc:P1_is_identified_by ?id.
+  ?id a god:GodscapesIdentifier.
+  ?id cidoc:P1_is_identified_by ?acro.
+  ?acro a god:SiteAcronym.
+  ?acro cidoc:P3_has_note ?acroString.
+  
+  ?id cidoc:P1_is_identified_by ?area.
+  ?area a god:Area.
+  ?area cidoc:P3_has_note ?areaString.
+
+  ?id cidoc:P1_is_identified_by ?idNum.
+  ?idNum a god:IdentificationNumber.
+  ?idNum cidoc:P3_has_note ?idNumString.
+  
+  #Site 
+  ?icono cidoc:P89_falls_within ?locsite.
+  ?locsite cidoc:P89_falls_within ?site.
+  ?site rdfs:label ?siteName. 
+     
+}
+GROUP BY ?siteName ?acroString ?areaString ?idNumString
