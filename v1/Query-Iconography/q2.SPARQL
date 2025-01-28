@@ -1,9 +1,13 @@
+#2 - Which iconographic motifs are exogenous?
+#IF “Motif origin” IS “Aegean” / “Anatolian” / “Egyptian” / “Mesopotamian” / “Syrian” > EXOGENOUS (results listed by field “Motif typology”)
+
+
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
 
-Select (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber) (STRAFTER(STR(?motifOrigin),"_MO_") AS ?MotifOrigin) (STRAFTER(STR(?motifType), "#") AS ?MotifType)
+Select (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber) (STRAFTER(STR(?origin),"#") AS ?MotifOrigin) (STRAFTER(STR(?motifType), "#") AS ?MotifType)
 WHERE
 {
   ?record a god:GodscapesRecord.  
@@ -17,7 +21,8 @@ WHERE
   ?t cidoc:P141_assigned ?motif.
   ?t cidoc:P140_assigned_attribute_to ?motifOrigin. 
   ?motifOrigin a god:OriginType.
-  FILTER(str(?motifOrigin) != "http://godscapes.unict.it/godscapes-ontology#ICO_IM_MO_levantine").
+  ?motifOrigin god:hasOrigin ?origin.
+  FILTER(str(?origin) != "http://godscapes.unict.it/godscapes-ontology#levantine").
 
   ?t1 cidoc:P141_assigned ?motif.
   ?t1 cidoc:P140_assigned_attribute_to ?motifType.
