@@ -1,0 +1,53 @@
+PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
+PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
+
+SELECT DISTINCT (str(?siteName) AS ?Site) (str(?areaString) AS ?Area) (?idNumString AS ?IDNumber) (strafter(str(?culticClass),"#") AS ?Type) (strafter(str(?spacetype),"#") AS ?SpaceType) ?ObjectCount
+WHERE
+{
+  ?record a god:GodscapesRecord.  
+  ?record cidoc:P70_documents ?assign.
+  ?assign a god:GodscapesAttributeAssignment.
+  ?assign cidoc:P140_assigned_attribute_to ?cultic.
+  ?cultic a ?culticClass.
+  ?culticClass rdfs:subClassOf god:CulticArchitecture.
+  ?space cidoc:P89_falls_within ?cultic.
+  
+{
+Select DISTINCT ?space ?spacetype (COUNT(?object) AS ?ObjectCount)
+WHERE
+{
+  ?cultic a ?culticClass.
+  ?culticClass rdfs:subClassOf god:CulticArchitecture.
+
+  ?space cidoc:P89_falls_within ?cultic.
+  ?space a ?spacetype.  
+  ?object  cidoc:P156_occupies ?space.
+  ?object  cidoc:P2_has_type ?furntype.
+  FILTER(?spacetype != <http://www.w3.org/2002/07/owl#NamedIndividual>)
+}   
+GROUP BY ?space ?spacetype
+}
+
+  #ID
+  ?record cidoc:P1_is_identified_by ?id.
+  ?id a god:GodscapesIdentifier.
+  ?id cidoc:P1_is_identified_by ?acro.
+  ?acro a god:SiteAcronym.
+  ?acro cidoc:P3_has_note ?acroString.
+  
+  ?id cidoc:P1_is_identified_by ?area.
+  ?area a god:Area.
+  ?area cidoc:P3_has_note ?areaString.
+
+  ?id cidoc:P1_is_identified_by ?idNum.
+  ?idNum a god:IdentificationNumber.
+  ?idNum cidoc:P3_has_note ?idNumString.
+ 
+  #Site 
+  ?cultic cidoc:P89_falls_within ?locsite.
+  ?locsite cidoc:P89_falls_within ?site.
+  ?site rdfs:label ?siteName.
+}
+ORDER BY ?site ?area ?idnumber

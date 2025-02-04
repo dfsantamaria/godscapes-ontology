@@ -1,0 +1,97 @@
+PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
+PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
+Select (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber) (str(?Chronology) as ?Chronology)
+{
+  {
+  Select*   
+  {
+  ?record a god:GodscapesRecord.  
+  ?record cidoc:P70_documents ?assign.
+  ?assign a god:GodscapesAttributeAssignment.
+  ?assign cidoc:P140_assigned_attribute_to ?cultic.  
+  ?cultic a ?culticClass.
+  ?culticClass rdfs:subClassOf god:CulticArchitecture.  
+
+  #Chronology
+  ?assign cidoc:P141_assigned ?chrono. 
+  ?chrono a god:Chronology.
+  ?chrono cidoc:P1_is_identified_by  ?chronol.
+  ?chronol rdfs:comment ?Chronology.
+
+  #ID
+  ?record cidoc:P1_is_identified_by ?id.
+  ?id a god:GodscapesIdentifier.
+  ?id cidoc:P1_is_identified_by ?acro.
+  ?acro a god:SiteAcronym.
+  ?acro cidoc:P3_has_note ?acroString.
+  
+  ?id cidoc:P1_is_identified_by ?area.
+  ?area a god:Area.
+  ?area cidoc:P3_has_note ?areaString.
+
+  ?id cidoc:P1_is_identified_by ?idNum.
+  ?idNum a god:IdentificationNumber.
+  ?idNum cidoc:P3_has_note ?idNumString.
+
+  #Site 
+  ?cultic cidoc:P89_falls_within ?locsite.
+  ?locsite cidoc:P89_falls_within ?site.
+  ?site rdfs:label ?siteName.   
+  
+  ?cultic cidoc:P56_bears_feature ?tp.
+  ?tp a god:TemplePlan.
+  ?s1 cidoc:P140_assigned_attribute_to ?tp.
+  ?s1 cidoc:P141_assigned ?g1.
+  ?g1 god:hasOrigin ?p.
+  FILTER(str(?p) != "http://godscapes.unict.it/godscapes-ontology#levantine")
+  }
+ }
+ UNION
+ {
+    Select*   
+  {
+  ?record a god:GodscapesRecord.  
+  ?record cidoc:P70_documents ?assign.
+  ?assign a god:GodscapesAttributeAssignment.
+  ?assign cidoc:P140_assigned_attribute_to ?cultic.  
+  ?cultic a ?culticClass.
+  ?culticClass rdfs:subClassOf god:CulticArchitecture.  
+
+  #Chronology
+  ?assign cidoc:P141_assigned ?chrono. 
+  ?chrono a god:Chronology.
+  ?chrono cidoc:P1_is_identified_by  ?chronol.
+  ?chronol rdfs:comment ?Chronology.
+
+  #ID
+  ?record cidoc:P1_is_identified_by ?id.
+  ?id a god:GodscapesIdentifier.
+  ?id cidoc:P1_is_identified_by ?acro.
+  ?acro a god:SiteAcronym.
+  ?acro cidoc:P3_has_note ?acroString.
+  
+  ?id cidoc:P1_is_identified_by ?area.
+  ?area a god:Area.
+  ?area cidoc:P3_has_note ?areaString.
+
+  ?id cidoc:P1_is_identified_by ?idNum.
+  ?idNum a god:IdentificationNumber.
+  ?idNum cidoc:P3_has_note ?idNumString.
+
+  #Site 
+  ?cultic cidoc:P89_falls_within ?locsite.
+  ?locsite cidoc:P89_falls_within ?site.
+  ?site rdfs:label ?siteName.   
+  
+  ?cultic cidoc:P56_bears_feature ?tp.
+  ?tp a god:TemplePlan.
+  ?s1 cidoc:P140_assigned_attribute_to ?tp.
+  ?s1 cidoc:P141_assigned ?g1.
+  ?g1 god:hasOrigin ?p.
+  FILTER(str(?p) != "http://godscapes.unict.it/godscapes-ontology#levantine")
+  }
+ }
+ }
+GROUP BY ?Acronym ?Area ?IDNumber

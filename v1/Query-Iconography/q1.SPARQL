@@ -1,6 +1,3 @@
-#1 - Which iconographic motifs are local?
-#IF “Motif origin” IS “Levantine” > LOCAL (results listed by field “Motif typology”)
-
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>

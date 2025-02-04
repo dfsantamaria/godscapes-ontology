@@ -1,0 +1,47 @@
+PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
+PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
+
+Select (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber)
+WHERE
+{
+  ?record a god:GodscapesRecord.  
+  ?record cidoc:P70_documents ?assign.
+  ?assign a god:GodscapesAttributeAssignment.
+  ?assign cidoc:P140_assigned_attribute_to ?cultic.
+  {
+  ?cultic a god:OpenAirCulticArchitecture.
+  }
+   UNION
+  {
+    ?cultic a god:Temple
+  }
+  #Chronology
+  ?assign cidoc:P141_assigned ?chrono. 
+  ?chrono a god:Chronology.
+  ?chrono cidoc:P1_is_identified_by  ?notMBI.
+
+  #ID
+  ?record cidoc:P1_is_identified_by ?id.
+  ?id a god:GodscapesIdentifier.
+  ?id cidoc:P1_is_identified_by ?acro.
+  ?acro a god:SiteAcronym.
+  ?acro cidoc:P3_has_note ?acroString.
+  
+  ?id cidoc:P1_is_identified_by ?area.
+  ?area a god:Area.
+  ?area cidoc:P3_has_note ?areaString.
+
+  ?id cidoc:P1_is_identified_by ?idNum.
+  ?idNum a god:IdentificationNumber.
+  ?idNum cidoc:P3_has_note ?idNumString.
+
+  #Site 
+  ?cultic cidoc:P89_falls_within ?locsite.
+  ?locsite cidoc:P89_falls_within ?site.
+  ?site rdfs:label ?siteName.
+
+   FILTER(str(?notMBI) != "http://godscapes.unict.it/godscapes-ontology#RC_mb_i")
+}
+GROUP BY ?Acronym ?Area ?IDNumber
