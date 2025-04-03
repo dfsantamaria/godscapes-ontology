@@ -1,3 +1,7 @@
+#3 - Which motif typologies are hybrid?
+#IF “Motif origin” AND “Divine motif attributes” AND/OR “Motif style” ARE DIFFERENT (es. EGYPTIAN AND SYRIAN AND/OR SYRIAN) > HYBRID (results listed by field “Motif typology”) 
+
+
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>

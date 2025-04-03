@@ -1,3 +1,7 @@
+#6 - Which motif typologies are hybrid?
+#IF “Motif origin” AND “Divine motif attributes” AND/OR “Motif style” ARE DIFFERENT (es. EGYPTIAN AND SYRIAN AND/OR SYRIAN) > HYBRID (results listed by field “Divinity typology”) 
+
+
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -37,8 +41,9 @@ WHERE
 
   FILTER(  STRAFTER(STR(?motifOrigin), "_MO_")  != STRAFTER(STR(?divinOrigin), "_DA_") OR STRAFTER(STR(?divinOrigin), "_DA_") !=  STRAFTER(STR(?style), "_ST_")  )
 
-  ?motif cidoc:P65_incorporates ?divinity.
-  ?divinity cidoc:P2_has_type ?divT.
+  ?motif cidoc:P65_incorporates ?divine.  
+  ?divine cidoc:P67_refers_to ?divAtt.
+  ?divAtt cidoc:P2_has_type ?divT.
 
   #ID
   ?record cidoc:P1_is_identified_by ?id.

@@ -1,3 +1,8 @@
+#5 - Which divine typologies are exogenous?
+#IF “Motif origin” IS “Aegean” / “Anatolian” / “Egyptian” / “Mesopotamian” / “Syrian” > EXOGENOUS (results #listed by field “Divine typology”)
+
+
+
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -20,7 +25,9 @@ WHERE
   FILTER(str(?motifOrigin) != "http://godscapes.unict.it/godscapes-ontology#ICO_IM_MO_levantine").
 
   ?motif cidoc:P65_incorporates ?divine.  
-  ?divine cidoc:P2_has_type ?divT.
+  ?divine cidoc:P67_refers_to ?divAtt.
+  ?divAtt cidoc:P2_has_type ?divT.
+     
     
 
   #ID

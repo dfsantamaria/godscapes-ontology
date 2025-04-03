@@ -1,9 +1,14 @@
+#4 - Which divine typologies are Levantine (local)?
+#IF “Motif origin” IS “Levantine” > LOCAL (results listed by field “Divine typology”)
+
+
+
 PREFIX god: <http://godscapes.unict.it/godscapes-ontology#>
 PREFIX cidoc: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos/>
 
-Select (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber) (STRAFTER(STR(?motifOrigin), "_MO_") AS ?MotifOrigin) (STRAFTER(STR(?divT), "#") AS ?DivineTypology)
+Select DISTINCT (str(?siteName) AS ?Site) (str(?acroString) AS ?Acronym)(str(?areaString) AS ?Area) (str(?idNumString) AS ?IDNumber) (STRAFTER(STR(?motifOrigin), "_MO_") AS ?MotifOrigin) (STRAFTER(STR(?divT), "#") AS ?DivineTypology)
 WHERE
 {
   ?record a god:GodscapesRecord.  
@@ -20,7 +25,7 @@ WHERE
   FILTER(str(?motifOrigin) = "http://godscapes.unict.it/godscapes-ontology#ICO_IM_MO_levantine").
 
   ?motif cidoc:P65_incorporates ?divine.  
-  ?divine cidoc:P67_refers_to ?divAt.
+  ?divine cidoc:P67_refers_to ?divAtt.
   ?divAtt cidoc:P2_has_type ?divT.
     
 
